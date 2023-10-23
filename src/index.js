@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const moogose = require('mongoose');
 //-----------------------------------
+//routes
+const productRoute = require('./routes/products');
 //-----------------------------------
 const app = express();
 dotenv.config();
@@ -14,10 +16,7 @@ moogose
 
 //-----------------------------------
 
-app.get('/',(req,res) => {
-    res.send("hello world!")
-})
-
+app.use('/product',productRoute);
 
 
 
