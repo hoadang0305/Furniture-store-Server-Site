@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const {ProductInfo, ProductImg, ProductReview} = require('../models/product');
+const ProductInfo = require('../models/product');
+const getAllProducts = require('../controller/products.js');
 
 //---------------------------------------------
 //CREATE - only for admin
@@ -10,26 +11,21 @@ router.post('/newProduct', async (req,res) => {
             price: req.body.price,
             shortDescription: req.body.shortDescription,
             fullDescription: req.body.fullDescription,
-            size: req.body.size,
-            color: req.body.color,
+            quantity: req.body.quantity,
+            quantity_sale: req.body.quantity_sale,
             type: req.body.type,
-            material: req.body.material,
-            weight: req.body.weight,
-            warrantySummary: req.body.warrantySummary,
             images: req.body.images,
             rating: req.body.rating,
             discount: req.body.discount,
-            review: req.body.review,
+            addInfo: req.body.addInfo
         });
         const product = await newProduce.save();
-        res.status(200).json(newProduce);
+        res.status(200).json(product);
     } catch (err) {
         res.status(500).json(err);
     }
-})
-
-
-
-
+});
+//GET ALL PRODUCT
+router.get('/',getAllProducts);
 //-----------------------------------------------------
 module.exports = router;

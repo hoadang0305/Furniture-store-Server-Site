@@ -2,8 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const moogose = require('mongoose');
 //-----------------------------------
-//routes
-const productRoute = require('./routes/products');
+//routes & controller
+const productRoute = require('./routes/productRouter');
+const userRoute = require('./routes/userRouter');
 //-----------------------------------
 const app = express();
 dotenv.config();
@@ -17,9 +18,7 @@ moogose
 //-----------------------------------
 
 app.use('/product',productRoute);
-
-
-
+app.use('/user',userRoute);
 //-----------------------------------
 app.listen(process.env.PORT,()=>{
     console.log("Server is running on http://localhost:5000");
