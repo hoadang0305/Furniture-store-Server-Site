@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const userSchema =  require('./user');
 //--------------------------------------------
 const ProductInfo = new Schema({
     productName: {
@@ -12,95 +11,45 @@ const ProductInfo = new Schema({
         type: Number,
         required: true
     },
+    quantity:{// số lượng
+        type: Number,
+        required: true
+    },
+    quantity_sale:{// số lượng đã bán
+        type: Number,
+        required: true
+    },
     shortDescription: {
         type: String,
         required: true
     },
     fullDescription: {
         type: String,
-        required: true
     },
-    size: {
-        type: String,//kích thước dài rộng cao
-        require:true
-    },
-    color: {
-        type: Array,// 1 list nhiều màu
-        require: true
+    addInfo: {
+        type: String,
     },
     type:{
-        type: Array,//vd: [Phòng khách,Sofa],...
-        required: true
-    },
-    material: {
-        type: String,
-        require: true
-    },
-    weight: {
-        type: Number,
-        required: true
-    },
-    warrantySummary: { // thời hạn bảo hành
-        type: String,
+        type: String,//vd: [Phòng khách],...
         required: true
     },
     images: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductImg',
-        default: ""
+        type: Array,
+        required: true,
     },
     rating: {
-        type: Number
+        type: Number,
+        default: 3.5
     },
     discount: {
-        type: Number
-    },
-    review: [{
-        type : Schema.Types.ObjectId,
-        ref: 'ProductReview',
-        default: ""
-    }]
-},{timestamps: false});// timestamp true thì có lưu thêm thuộc tính thời gian tạo
-
-const ProductImg = new Schema ({
-    productId : {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductInfo'
-    },
-    Img_color1: {
-        type: Array,
-        required: true
-    },
-    Img_color2: {
-        type: Array,
-        required: true
-    },
-    Img_color3: {
-        type: Array,
-        required: true
-    },
-},{timestamps:false});
-
-const ProductReview = new Schema({
-    productId: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductInfo'
-    },
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'userInfo'
-    },
-    data: {
-        type: String
-    },
-    userRating:{
         type: Number,
-        required: true
+        default: 0
     }
-},{timestamps: true});
+},{timestamps: false, toJSON: {virtuals: true}});// timestamp true thì có lưu thêm thuộc tính thời gian tạo=
 
-module.exports = {
-    ProductInfo: mongoose.model('ProductInfo', ProductInfo),
-    ProductImg: mongoose.model('ProductImg', ProductImg),
-    ProductReview: mongoose.model('ProductReview',ProductReview)
-};
+ProductInfo.virtual('ProductReviews',{
+    ref: 'ProductReview',
+    localField: '_id',
+    foreignField: 'product'
+});
+module.exports = mongoose.model('ProductInfo',ProductInfo);

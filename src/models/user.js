@@ -24,4 +24,4 @@ const userInfo = new Schema({
 
 },{timestamps: false});
 
-module.exports = mongoose.model('userInfo', userInfo);
+module.exports = mongoose.model('UserInfo', userInfo);
