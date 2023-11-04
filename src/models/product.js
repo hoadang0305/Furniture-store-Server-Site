@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 //--------------------------------------------
 const ProductInfo = new Schema({
-    productName: {
+    Name: {
         type: String,
         required: true,
         unique: true
@@ -19,15 +19,31 @@ const ProductInfo = new Schema({
         type: Number,
         required: true
     },
-    shortDescription: {
+    shortDesc: {
         type: String,
         required: true
     },
-    fullDescription: {
-        type: String,
+    fullDesc: {
+        type: Object,
+        data: {
+            brief: {type: String, default: ""},
+            atrb1: {type:String,default: ""},
+            atrb2: {type: String,default: ""},
+            atrb3: {type:String,default: ""},
+            atrb4: {type: String,default: ""},
+            atrb5: {type:String,default: ""},
+        }
     },
     addInfo: {
-        type: String,
+        type: Object,
+        data: {
+            dimension: {type:String,default: ""},//W-H-D
+            atrb1: {type:String,default: ""},
+            atrb2: {type: String,default: ""},
+            atrb3: {type:String,default: ""},
+            atrb4: {type: String,default: ""},
+            atrb5: {type:String,default: ""}
+        }
     },
     type:{
         type: String,//vd: [Phòng khách],...
@@ -42,8 +58,7 @@ const ProductInfo = new Schema({
         default: 3.5
     },
     discount: {
-        type: Number,
-        default: 0
+        type: String,
     }
 },{timestamps: false, toJSON: {virtuals: true}});// timestamp true thì có lưu thêm thuộc tính thời gian tạo=
 
