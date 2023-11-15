@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const ProductInfo = require('../models/product');
-const getAllProducts = require('../controller/products.js');
+const getAllProducts = require('../controller/productsController.js');
 
 //---------------------------------------------
 //CREATE - only for admin
+const ProductInfo = require('../models/productModel.js');
 router.post('/newProduct', async (req,res) => {
     try {
         const newProduce = new ProductInfo(req.body);

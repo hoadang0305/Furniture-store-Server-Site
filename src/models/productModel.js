@@ -11,6 +11,10 @@ const ProductInfo = new Schema({
         type: Number,
         required: true
     },
+    origin_price:{
+        type: Number,
+        require: true
+    },
     quantity:{// số lượng
         type: Number,
         required: true
@@ -46,7 +50,7 @@ const ProductInfo = new Schema({
         }
     },
     type:{
-        type: String,//vd: [Phòng khách],...
+        type: Array,//vd: [Phòng khách],...
         required: true
     },
     images: {
