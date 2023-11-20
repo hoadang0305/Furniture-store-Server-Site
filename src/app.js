@@ -1,8 +1,15 @@
 const express = require('express');
+const cors = require('cors');
 
 //-----------------------------------
 const app = express();
 app.use(express.json());
+const corsOption = {
+    origin: "http://localhost:3000",
+    credentials: true
+}
+app.use(cors(corsOption));// sau này chỉnh lại thành đg dẫn mặc định
+
 //-----------------------------------
 //routes & controller
 const productRoute = require('./routes/productRouter');
