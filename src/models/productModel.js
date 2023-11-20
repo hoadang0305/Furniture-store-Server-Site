@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 //--------------------------------------------
 const ProductInfo = new Schema({
-    Name: {
+    name: {
         type: String,
         required: true,
         unique: true
@@ -11,7 +11,7 @@ const ProductInfo = new Schema({
         type: Number,
         required: true
     },
-    origin_price:{
+    originPrice:{
         type: Number,
         require: true
     },
@@ -19,7 +19,7 @@ const ProductInfo = new Schema({
         type: Number,
         required: true
     },
-    quantity_sale:{// số lượng đã bán
+    quantitySale:{// số lượng đã bán
         type: Number,
         required: true
     },
