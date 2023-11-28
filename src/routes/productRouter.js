@@ -3,7 +3,7 @@ const getAllProducts = require('../controller/productsController.js');
 
 //---------------------------------------------
 //CREATE - only for admin
-const ProductInfo = require('../models/productModel.js');
+const ProductInfo = require('../models/Product.js');
 router.post('/newProduct', async (req,res) => {
     try {
         const newProduce = new ProductInfo(req.body);
