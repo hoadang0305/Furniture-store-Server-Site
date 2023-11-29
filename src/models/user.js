@@ -37,7 +37,7 @@ userInfo.pre('save', async function(next) {
 });
 
 userInfo.methods.generateJWT = async function() {
-    return await sign({id: this._id}, process.env.ACCESS_TOKEN, {expiresIn: '30d',});
+    return await sign({id: this._id}, process.env.USER_TOKEN, {expiresIn: '30d',});
 };
 
 userInfo.methods.comparePassword = async function(enteredPassword){
