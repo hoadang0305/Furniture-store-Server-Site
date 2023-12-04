@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const getAllProducts = require('../controller/productsController.js');
+const {getAllProducts,getProductById} = require('../controller/productsController.js');
 
 //---------------------------------------------
 //CREATE - only for admin
@@ -15,5 +15,6 @@ router.post('/newProduct', async (req,res) => {
 });
 //GET ALL PRODUCT
 router.get('/',getAllProducts);
+router.get('/:id',getProductById);
 //-----------------------------------------------------
 module.exports = router;

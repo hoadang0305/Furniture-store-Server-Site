@@ -30,7 +30,6 @@ const getAllProducts = async (req,res) => {
         const page = req.query.page;
         const limit = req.query.limit;
         const skip = (page - 1) * limit;
-        console.log(page, limit, skip);
         query = query.skip(skip).limit(limit);
         if (req.query.page) {
           const productCount = await ProductInfo.countDocuments();
@@ -43,4 +42,17 @@ const getAllProducts = async (req,res) => {
         throw new Error(error);
       }
 }
-module.exports = getAllProducts;
+
+const getProductById = async (req, res) => {
+  try {
+    const productId =  req.params.id;
+    const product = await ProductInfo.findById(productId);
+    if(!product){
+      throw new Error("This product does not exists");
+    }
+    res.json(product);
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+module.exports = {getAllProducts, getProductById};
