@@ -17,7 +17,7 @@ const userRoute = require('./routes/userRouter');
 
 //-----------------------------------
 
-app.use('/api/product',productRoute);   
+app.use('/api/product',productRoute);
 app.use('/api/user',userRoute);
 app.use('/api/picture',express.static('public'));
 // đường dẫn của 1 file ảnh là: /Livingroom/maimz_Sofa/img1.webp
