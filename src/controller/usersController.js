@@ -18,6 +18,7 @@ const registerUser = async (req,res,next)=> {
             _id: user._id,
             userName : user.userName,
             email : user.email,
+            phoneNumber: user.phoneNumber,
             token: await user.generateJWT(), 
         });
 
@@ -39,6 +40,7 @@ const loginUser = async (req,res,next) => {
                 _id: user._id,
                 userName : user.userName,
                 email : user.email,
+                phoneNumber: user.phoneNumber,
                 token: await user.generateJWT(), 
             });
         } else {
@@ -57,7 +59,8 @@ const userProfile = async (req,res,next) => {
                 _id: user._id,
                 avatar : user.avatar,
                 name : user.name,
-                email : user.email
+                email : user.email,
+                phoneNumber: user.phoneNumber
             });
         } else {
             let error = new Error("User not found");
@@ -77,19 +80,21 @@ const updateProfile = async (req,res,next) => {
             throw new Error("User not found");
         }
 
-        user.name = req.body.name || user.name;
+        user.userName = req.body.userName || user.userName;
         user.email = req.body.email || user.email;
-        if(req.body.password && req.body.password.length < 6){
-            throw new Error("Password length must be at least 6 character");
-        } else if (req.body.password){
-            user.password = req.body.password;
-        }
+        user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+        // if(req.body.password && req.body.password.length < 6){
+        //     throw new Error("Password length must be at least 6 character");
+        // } else if (req.body.password){
+        //     user.password = req.body.password;
+        // }
         const updateUserProfile = await user.save();
         
         res.json({
             _id: updateUserProfile._id,
-            name : updateUserProfile.name,
-            email : updateUserProfile.email
+            name: updateUserProfile.name,
+            email: updateUserProfile.email,
+            phoneNumber: updateProfile.phoneNumber
         })
     } catch (error) {
         next(error);
