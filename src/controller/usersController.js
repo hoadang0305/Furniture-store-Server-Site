@@ -83,18 +83,13 @@ const updateProfile = async (req,res,next) => {
         user.userName = req.body.userName || user.userName;
         user.email = req.body.email || user.email;
         user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
-        // if(req.body.password && req.body.password.length < 6){
-        //     throw new Error("Password length must be at least 6 character");
-        // } else if (req.body.password){
-        //     user.password = req.body.password;
-        // }
         const updateUserProfile = await user.save();
         
         res.json({
             _id: updateUserProfile._id,
-            name: updateUserProfile.name,
+            userName: updateUserProfile.userName,
             email: updateUserProfile.email,
-            phoneNumber: updateProfile.phoneNumber
+            phoneNumber: updateUserProfile.phoneNumber
         })
     } catch (error) {
         next(error);
