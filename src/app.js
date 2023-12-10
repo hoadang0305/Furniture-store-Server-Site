@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 app.use(express.json());
 const corsOption = {
-    origin: "http://localhost:3500",
+    origin: "http://localhost:3000",
     credentials: true
 }
 app.use(cors(corsOption));// sau này chỉnh lại thành đg dẫn mặc định
