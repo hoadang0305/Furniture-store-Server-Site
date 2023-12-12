@@ -21,33 +21,17 @@ const ProductInfo = new Schema({
     },
     quantitySale:{// số lượng đã bán
         type: Number,
-        required: true
+        default: 0
     },
     shortDesc: {
         type: String,
-        required: true
+        required: true,
+        default: ""
     },
     fullDesc: {
-        type: Object,
-        data: {
-            brief: {type: String, default: ""},
-            atrb1: {type:String,default: ""},
-            atrb2: {type: String,default: ""},
-            atrb3: {type:String,default: ""},
-            atrb4: {type: String,default: ""},
-            atrb5: {type:String,default: ""},
-        }
-    },
-    addInfo: {
-        type: Object,
-        data: {
-            dimension: {type:String,default: ""},//W-H-D
-            atrb1: {type:String,default: ""},
-            atrb2: {type: String,default: ""},
-            atrb3: {type:String,default: ""},
-            atrb4: {type: String,default: ""},
-            atrb5: {type:String,default: ""}
-        }
+        type: String,
+        require: true,
+        default: ""
     },
     type:{
         type: Array,//vd: [Phòng khách],...
@@ -59,16 +43,16 @@ const ProductInfo = new Schema({
     },
     rating: {
         type: Number,
-        default: 3.5
+        default: 4.5
     },
     discount: {
         type: String,
-    }
+    },
+    seller: {
+        type: String,
+        require: true
+    },
+
 },{timestamps: false, toJSON: {virtuals: true}});// timestamp true thì có lưu thêm thuộc tính thời gian tạo=
 
-ProductInfo.virtual('ProductReviews',{
-    ref: 'ProductReview',
-    localField: '_id',
-    foreignField: 'product'
-});
 module.exports = mongoose.model('ProductInfo',ProductInfo);

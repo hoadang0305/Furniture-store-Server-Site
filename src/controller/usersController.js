@@ -32,7 +32,7 @@ const loginUser = async (req,res,next) => {
         const {email , password} = req.body;
         let user = await User.findOne({email});
         if(!user){
-            throw new Error("Email ot found");
+            throw new Error("Email not found");
         }
 
         if(await user.comparePassword(password)){
@@ -63,9 +63,7 @@ const userProfile = async (req,res,next) => {
                 phoneNumber: user.phoneNumber
             });
         } else {
-            let error = new Error("User not found");
-            error.statusCode = 404;
-            next(error);
+            throw new Error("User not found");
         }
     } catch (error) {
         next(error);
@@ -85,7 +83,7 @@ const updateProfile = async (req,res,next) => {
         user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
         const updateUserProfile = await user.save();
         
-        res.json({
+        res.status(201).json({
             _id: updateUserProfile._id,
             userName: updateUserProfile.userName,
             email: updateUserProfile.email,
@@ -96,4 +94,49 @@ const updateProfile = async (req,res,next) => {
     }
 }
 
-module.exports = {registerUser, loginUser, userProfile, updateProfile};
+const loginAdmin = async (req, res, next) => {
+    try {
+        const {email , password} = req.body;
+        let user = await User.findOne({email});
+        if(await user.comparePassword(password)){
+            return res.status(201).json({
+                _id: user._id,
+                userName : user.userName,
+                email : user.email,
+                phoneNumber: user.phoneNumber,
+                token: await user.generateJWTSeller(), 
+            });
+        } else {
+            throw new Error("Invalid email or password");
+        }
+    } catch(error) {
+        next(error);
+    }
+}
+//only for testing
+const registerAdmin = async(req, res, next)=> {
+    try {
+        const {userName, email,phoneNumber, password} = req.body;
+
+        //check whether user exists or not
+        let user = await User.findOne({email});
+        if (user) {
+            throw new Error("have registered");
+        }
+        // creating a new user
+        user = await User.create({
+            userName, email,phoneNumber, password, role: "admin"
+        });
+        return res.status(201).json({
+            _id: user._id,
+            userName : user.userName,
+            email : user.email,
+            phoneNumber: user.phoneNumber,
+            //token: await user.generateJWTSeller(), 
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+module.exports = {registerUser, loginUser, userProfile, updateProfile, loginAdmin, registerAdmin};

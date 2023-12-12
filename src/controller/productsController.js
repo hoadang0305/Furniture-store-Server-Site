@@ -1,6 +1,6 @@
 const ProductInfo = require('../models/Product');
 
-const getAllProducts = async (req,res) => {
+const getAllProducts = async (req,res, next) => {
     try {
         // 1. Filtering
         const queryObj = { ...req.query };
@@ -39,20 +39,79 @@ const getAllProducts = async (req,res) => {
         const product = await query;
         res.json(product);
       } catch (error) {
-        throw new Error(error);
+        next(error);
       }
 }
 
-const getProductById = async (req, res) => {
+//------------------------------for admin---------------------------------
+//add a product testing
+const addProduct = async (req,res, next) => {
+  try {
+      
+      const newProduce = new ProductInfo(req.body);
+      const product = await newProduce.save();
+      res.status(201).json(product);
+  } catch (err) {
+      next(err)
+  }
+}
+// get list product
+const getAdminProduct = async (req, res, next) => {
+  try {
+    adminId = req.body._id;
+    listProduct = await ProductInfo.find({seller: adminId});
+    if(listProduct.length = 0){
+      throw new Error("No product found");
+    }
+  res.status(201).json(listProduct);
+  } catch (error) {
+    next(error);
+  }
+}
+const updateProduct = async(req,res,next)=> {
   try {
     const productId =  req.params.id;
     const product = await ProductInfo.findById(productId);
     if(!product){
       throw new Error("This product does not exists");
     }
-    res.json(product);
-  } catch (error) {
-    throw new Error(error);
+
+    product.name = req.body.name || product.name;
+    product.price = req.body.price || product.price;
+    product.originPrice = req.body.originPrice || product.originPrice;
+    product.quantity = req.body.quantity || product.quantity;
+    product.shortDesc = req.body.shortDesc || product.shortDesc;
+    product.fullDesc = req.body.fullDesc || product.fullDesc;
+    product.type = req.body.type || product.type;
+    product.discount = req.body.discount || product.discount;
+
+    const updatePro = await product.save(); 
+    res.status(201).json(updatePro.select("-images -seller"));
+  } catch (err) {
+    next(err);
   }
 }
-module.exports = {getAllProducts, getProductById};
+const deleteProduct = async(req,res,next)=> {
+  try {
+    const productId =  req.params.id;
+    const adminId = req.user._id;
+    const product = await ProductInfo.findById(productId);
+    if(!product){
+      throw new Error("This product does not exists");
+    }
+    if(product.seller === adminId) {
+      throw new Error("Not authorized, Can't delete");
+    }
+    const deletionResult = await ProductInfo.deleteOne({ _id: productId });
+    if (deletionResult.deletedCount === 1) {
+      res.status(200).json({ message: "Product deleted successfully" });
+    } else {
+      throw new Error("Failed to delete product");
+    }
+
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {getAllProducts, getAdminProduct,addProduct,updateProduct,deleteProduct};

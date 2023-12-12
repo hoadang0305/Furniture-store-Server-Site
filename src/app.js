@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const {errorResposerHandler, invalidPathHandler} = require('./middleware/errorHandler');
 
 //-----------------------------------
 const app = express();
@@ -20,6 +21,9 @@ const userRoute = require('./routes/userRouter');
 app.use('/api/product',productRoute);
 app.use('/api/user',userRoute);
 app.use('/api/picture',express.static('public'));
+
+app.use(invalidPathHandler);
+app.use(errorResposerHandler);
 // đường dẫn của 1 file ảnh là: /Livingroom/maimz_Sofa/img1.webp
 //-----------------------------------
 module.exports = app;

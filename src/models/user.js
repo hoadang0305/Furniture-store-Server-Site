@@ -22,9 +22,9 @@ const userInfo = new Schema({
         type: String,
         required: true
     },
-    profilePic: {
+    role: {
         type: String,
-        default: ""
+        default: "user"
     }
 },{timestamps: false});
 
@@ -38,6 +38,10 @@ userInfo.pre('save', async function(next) {
 
 userInfo.methods.generateJWT = async function() {
     return await sign({id: this._id}, process.env.USER_TOKEN, {expiresIn: '30d',});
+};
+
+userInfo.methods.generateJWTSeller = async function() {
+    return await sign({id: this._id}, process.env.SELLER_TOKEN, {expiresIn: '30d',});
 };
 
 userInfo.methods.comparePassword = async function(enteredPassword){
