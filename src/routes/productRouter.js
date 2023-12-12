@@ -8,8 +8,7 @@ const ProductInfo = require('../models/Product.js');
 //user
 router.get('/',getAllProducts);
 //admin
-router.post('/createproduct', isAdmin,addProduct);
-router.get('/getproduct', checkTokenAdmin,getAdminProduct);
+router.post('/createproduct', checkTokenAdmin,addProduct);
 router.put('/updateproduct/:id', checkTokenAdmin,updateProduct);
 router.delete('/deleteproduct/:id', checkTokenAdmin,deleteProduct)
 //-----------------------------------------------------

@@ -139,4 +139,4 @@ const registerAdmin = async(req, res, next)=> {
         next(error);
     }
 }
-module.exports = {registerUser, loginUser, userProfile, updateProfile, loginAdmin, registerAdmin};
+module.exports = {registerUser, loginUser, userProfile, updateProfile, loginAdmin, registerAdmin};   

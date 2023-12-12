@@ -15,11 +15,13 @@ app.use(cors(corsOption));// sau này chỉnh lại thành đg dẫn mặc đị
 //routes & controller
 const productRoute = require('./routes/productRouter');
 const userRoute = require('./routes/userRouter');
+const cartRoute = require('./routes/cartRouter');
 
 //-----------------------------------
 
 app.use('/api/product',productRoute);
 app.use('/api/user',userRoute);
+app.use('/api/cart', cartRoute);
 app.use('/api/picture',express.static('public'));
 
 app.use(invalidPathHandler);
