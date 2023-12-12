@@ -38,8 +38,7 @@ const ProductInfo = new Schema({
         required: true
     },
     images: {
-        type: Array,
-        required: true,
+        type: Array
     },
     rating: {
         type: Number,

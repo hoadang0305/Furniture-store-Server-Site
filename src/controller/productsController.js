@@ -1,3 +1,4 @@
+const { errorResposerHandler } = require('../middleware/errorHandler');
 const ProductInfo = require('../models/Product');
 
 const getAllProducts = async (req,res, next) => {
@@ -47,37 +48,39 @@ const getAllProducts = async (req,res, next) => {
 //add a product testing
 const addProduct = async (req,res, next) => {
   try {
-      
-      const newProduce = new ProductInfo(req.body);
-      const product = await newProduce.save();
-      res.status(201).json(product);
-  } catch (err) {
-      next(err)
-  }
-}
-// get list product
-const getAdminProduct = async (req, res, next) => {
-  try {
-    adminId = req.body._id;
-    listProduct = await ProductInfo.find({seller: adminId});
-    if(listProduct.length = 0){
-      throw new Error("No product found");
+    const product = await ProductInfo.findOne({name: req.body.name});
+    if(product){
+      throw new Error("This product aready exists");
     }
-  res.status(201).json(listProduct);
+    
+    const newProduct = ProductInfo.create({
+      name : req.body.name,
+      price: (req.body.originPrice - req.body.originPrice * (req.body.discount / 100)),
+      originPrice : req.body.originPrice,
+      shortDesc: req.body.shortDesc,
+      fullDesc: req.body.fullDesc,
+      type: req.body.type,
+      discount: req.body.discount  
+    });
+    if(!newProduct){
+      throw new Error("Create failed!")
+    }
+    res.status(201).json(newProduct);
   } catch (error) {
-    next(error);
+    next(error)
   }
 }
+
 const updateProduct = async(req,res,next)=> {
   try {
     const productId =  req.params.id;
     const product = await ProductInfo.findById(productId);
     if(!product){
-      throw new Error("This product does not exists");
+      throw new Error("This product does not exist");
     }
-
+    
     product.name = req.body.name || product.name;
-    product.price = req.body.price || product.price;
+    product.price = (req.body.originPrice - req.body.originPrice * (req.body.discount / 100)) || product.price;
     product.originPrice = req.body.originPrice || product.originPrice;
     product.quantity = req.body.quantity || product.quantity;
     product.shortDesc = req.body.shortDesc || product.shortDesc;
@@ -86,7 +89,7 @@ const updateProduct = async(req,res,next)=> {
     product.discount = req.body.discount || product.discount;
 
     const updatePro = await product.save(); 
-    res.status(201).json(updatePro.select("-images -seller"));
+    res.status(201).json(updatePro.select("-images"));
   } catch (err) {
     next(err);
   }
@@ -94,13 +97,9 @@ const updateProduct = async(req,res,next)=> {
 const deleteProduct = async(req,res,next)=> {
   try {
     const productId =  req.params.id;
-    const adminId = req.user._id;
     const product = await ProductInfo.findById(productId);
     if(!product){
       throw new Error("This product does not exists");
-    }
-    if(product.seller === adminId) {
-      throw new Error("Not authorized, Can't delete");
     }
     const deletionResult = await ProductInfo.deleteOne({ _id: productId });
     if (deletionResult.deletedCount === 1) {
@@ -114,4 +113,4 @@ const deleteProduct = async(req,res,next)=> {
   }
 }
 
-module.exports = {getAllProducts, getAdminProduct,addProduct,updateProduct,deleteProduct};
+module.exports = {getAllProducts,addProduct,updateProduct,deleteProduct};
