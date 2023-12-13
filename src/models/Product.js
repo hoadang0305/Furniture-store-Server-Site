@@ -46,12 +46,7 @@ const ProductInfo = new Schema({
     },
     discount: {
         type: String,
-    },
-    seller: {
-        type: String,
-        require: true
-    },
-
+    }
 },{timestamps: false, toJSON: {virtuals: true}});// timestamp true thì có lưu thêm thuộc tính thời gian tạo=
 
 module.exports = mongoose.model('ProductInfo',ProductInfo);

@@ -52,19 +52,24 @@ const addProduct = async (req,res, next) => {
     if(product){
       throw new Error("This product aready exists");
     }
-    
+    req.body.images = req.files.map(file => file.path.replace('public',''));
+    console.log(req.body.images);
     const newProduct = ProductInfo.create({
       name : req.body.name,
-      price: (req.body.originPrice - req.body.originPrice * (req.body.discount / 100)),
+      price: req.body.price,
       originPrice : req.body.originPrice,
+      quantity: req.body.quantity,
       shortDesc: req.body.shortDesc,
       fullDesc: req.body.fullDesc,
       type: req.body.type,
-      discount: req.body.discount  
+      discount: req.body.discount,
+      rating: req.body.rating,
+      images: req.body.images
     });
     if(!newProduct){
       throw new Error("Create failed!")
     }
+    console.log("Add product completed");
     res.status(201).json(newProduct);
   } catch (error) {
     next(error)
@@ -80,13 +85,19 @@ const updateProduct = async(req,res,next)=> {
     }
     
     product.name = req.body.name || product.name;
-    product.price = (req.body.originPrice - req.body.originPrice * (req.body.discount / 100)) || product.price;
+    if(req.body.discount === "0") {
+      product.price = req.body.originPrice || product.price;
+      product.discount = "" || product.discount;
+    } else {
+      product.price = (req.body.originPrice - req.body.originPrice * (parseFloat(req.body.discount) / 100)) || product.price;
+      product.discount = req.body.discount || product.discount;
+    }
     product.originPrice = req.body.originPrice || product.originPrice;
     product.quantity = req.body.quantity || product.quantity;
     product.shortDesc = req.body.shortDesc || product.shortDesc;
     product.fullDesc = req.body.fullDesc || product.fullDesc;
     product.type = req.body.type || product.type;
-    product.discount = req.body.discount || product.discount;
+    
 
     const updatePro = await product.save(); 
     res.status(201).json(updatePro.select("-images"));

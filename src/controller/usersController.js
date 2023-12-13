@@ -44,7 +44,7 @@ const loginUser = async (req,res,next) => {
                 token: await user.generateJWT(), 
             });
         } else {
-            throw new Error("Invalid email or password");
+            throw new Error("Invalid email or password");x
         }
     } catch(error) {
         next(error);
