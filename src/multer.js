@@ -2,8 +2,9 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) =>{
-        const path1 = 'public/' + req.body.type + '/';
-
+        
+        //const type = req.body.get('type')[0];
+        const path1 = 'public/newProduct/';
         cb(null, path1);
     },
     filename: (req, file, cb) => {                    

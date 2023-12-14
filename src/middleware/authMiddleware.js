@@ -68,4 +68,12 @@ const checkTokenAdmin = async (req,res,next)=>{
     }
 }
 
-module.exports = {authGuard,isAdmin,checkTokenAdmin};
+const checkValidProduct = async(req,res,next) => {
+    try {
+        console.log(req.files);
+        next();
+    } catch (error) {
+        next(error)
+    }
+}
+module.exports = {authGuard,isAdmin,checkTokenAdmin,checkValidProduct};

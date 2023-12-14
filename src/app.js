@@ -5,6 +5,7 @@ const {errorResposerHandler, invalidPathHandler} = require('./middleware/errorHa
 //-----------------------------------
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const corsOption = {
     origin: "http://localhost:3000",
     credentials: true

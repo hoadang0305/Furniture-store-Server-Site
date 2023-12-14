@@ -1,4 +1,4 @@
-const { errorResposerHandler } = require('../middleware/errorHandler');
+const fs = require('fs');
 const ProductInfo = require('../models/Product');
 
 const getAllProducts = async (req,res, next) => {
@@ -50,11 +50,21 @@ const addProduct = async (req,res, next) => {
   try {
     const product = await ProductInfo.findOne({name: req.body.name});
     if(product){
-      throw new Error("This product aready exists");
-    }
-    req.body.images = req.files.map(file => file.path.replace('public',''));
-    console.log(req.body.images);
-    const newProduct = ProductInfo.create({
+      // throw new Error("This product aready exists");
+      console.log("This product aready exists");
+      const filePaths = req.files.map(file => file.path);
+      filePaths.forEach(path => {
+        const path1 = './'+ path;
+        fs.unlink(path1)
+      });
+
+      
+    } else{
+      console.log(req.files.path);
+      const pathFile = req.files.map(file => file.path.replace('public',''));
+      req.body.images = pathFile.map(path => path.replaceAll('\\','/'));
+      console.log(req.body.images);
+      const newProduct = ProductInfo.create({
       name : req.body.name,
       price: req.body.price,
       originPrice : req.body.originPrice,
@@ -71,6 +81,8 @@ const addProduct = async (req,res, next) => {
     }
     console.log("Add product completed");
     res.status(201).json(newProduct);
+    }
+    
   } catch (error) {
     next(error)
   }
