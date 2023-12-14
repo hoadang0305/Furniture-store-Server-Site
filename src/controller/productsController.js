@@ -43,6 +43,19 @@ const getAllProducts = async (req,res, next) => {
         next(error);
       }
 }
+//
+const getProduct = async(req, res, next) => {
+  try {
+    const productId =  req.params.id;
+    const product = await ProductInfo.findById(productId);
+    if(!product){
+      throw new Error("This product does not exist");
+    }
+    res.status(201).json(product);
+  } catch (error) {
+    next(error);
+  }
+}
 
 //------------------------------for admin---------------------------------
 //add a product testing
@@ -136,4 +149,4 @@ const deleteProduct = async(req,res,next)=> {
   }
 }
 
-module.exports = {getAllProducts,addProduct,updateProduct,deleteProduct};
+module.exports = {getAllProducts,getProduct,addProduct,updateProduct,deleteProduct};
