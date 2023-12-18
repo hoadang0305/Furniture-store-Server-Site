@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const {errorResposerHandler, invalidPathHandler} = require('./middleware/errorHandler');
+require('express-async-errors');
 
 //-----------------------------------
 const app = express();
