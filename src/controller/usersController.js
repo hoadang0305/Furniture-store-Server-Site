@@ -8,7 +8,7 @@ const registerUser = async (req,res,next)=> {
         //check whether user exists or not
         let user = await User.findOne({email});
         if (user) {
-            throw new Error("have registered");
+            throw new Error("Email is ready exists");
         }
         // creating a new user
         user = await User.create({
