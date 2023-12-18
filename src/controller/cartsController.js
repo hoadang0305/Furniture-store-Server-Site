@@ -2,13 +2,11 @@ const CartInfo = require('../models/Cart');
 
 const getCart = async (req,res, next) => {
     try {
-
-        let query = CartInfo.find({userId : req.user._id});
-        if(!query){
+        let cart = await CartInfo.findOne({userId : req.user._id});
+        if(!cart){
           throw new Error("Dont have any products in the cart");
         }
-        const cart = await query;
-        res.json(cart);
+        res.json(cart.productList);
       } catch (error) {
         next(error);
       }
@@ -16,7 +14,8 @@ const getCart = async (req,res, next) => {
 const addProduct = async (req,res, next) => {
   try {
     const cart = await CartInfo.findOne({userId : req.user._id});
-    if(cart.userId == undefined && cart.productList == undefined){
+    console.log(req.body)
+    if(!cart){
         const newCart = await CartInfo.create({
         userId: req.user._id,
         productList: [
@@ -34,12 +33,13 @@ const addProduct = async (req,res, next) => {
 
     } else {
         const existingProduct = await CartInfo.findOne({
-            userId: req.body.userId,
+            userId: req.user._id,
             'productList.productName': req.body.name
         });
         if (existingProduct) {
             throw new Error("Product already added to cart");
         }
+  
         const newProduct = {
             productName: req.body.name,
             quantity: req.body.quantity,
@@ -84,12 +84,30 @@ const updateCart = async(req,res,next)=> {
 }*/
 const deleteProduct = async(req,res,next)=> {
   try {
-    const cart = CartInfo.find({userId : req.user._id});
+    let cart = await CartInfo.findOne({userId : req.user._id});
     if(!cart){
-      throw new Error("Dont have any products in the cart");
+        throw new Error("Dont have any products in the cart");
     }
-    const deletionResult = await CartInfo.productList.pull({productName: req.body.name});
+    let existingProduct = null
+    cart.productList.forEach((arrObj) => {
+      if (arrObj.productName === req.body.name) {
+        existingProduct = arrObj;
+        return false; // break the loop
+      }
+    });
+  if (!existingProduct) {
+      throw new Error("Dont have product in cart");
+  }
+    const deletionResult = await CartInfo.updateOne(
+      { userId: req.user._id},
+      { $pull: { productList: existingProduct} }
+    );    
     if (deletionResult) {
+      cart = await CartInfo.findOne({userId : req.user._id})
+      if (cart.productList.length === 0)
+      { 
+        a = await CartInfo.deleteOne({ _id: cart._id});
+      }
       res.status(200).json({ message: "Product deleted successfully" });
     } else {
       throw new Error("Failed to delete product");

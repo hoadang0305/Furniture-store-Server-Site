@@ -88,12 +88,12 @@ const addProduct = async (req,res, next) => {
       discount: req.body.discount,
       rating: req.body.rating,
       images: req.body.images
-    });
-    if(!newProduct){
-      throw new Error("Create failed!")
-    }
-    console.log("Add product completed");
-    res.status(201).json(newProduct);
+      });
+      if(!newProduct) {
+        throw new Error("Create failed!")
+      }
+      console.log("Add product completed");
+      res.status(201).json(newProduct);
     }
     
   } catch (error) {
