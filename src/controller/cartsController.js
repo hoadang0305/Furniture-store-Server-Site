@@ -14,7 +14,6 @@ const getCart = async (req,res, next) => {
 const addProduct = async (req,res, next) => {
   try {
     const cart = await CartInfo.findOne({userId : req.user._id});
-    console.log(req.body)
     if(!cart){
         const newCart = await CartInfo.create({
         userId: req.user._id,
