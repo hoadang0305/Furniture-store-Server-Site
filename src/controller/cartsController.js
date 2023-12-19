@@ -106,7 +106,7 @@ const deleteProduct = async(req,res,next)=> {
     if(cart.productList.length === oldLegth) throw new Error("Your cart doesn't contain this product");
     else if(cart.productList.length === 0) {
         deleteCart = await CartInfo.deleteOne({_id : cart._id});
-        if(deleteCart) res.status(201).json({message: "Your cart is empty"});
+        if(deleteCart) res.status(201).json([]);
     } else if(cart.productList.length === oldLegth - 1){
         res.status(201).json(cart.productList);
     }
