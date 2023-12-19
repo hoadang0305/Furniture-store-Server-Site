@@ -102,6 +102,7 @@ const deleteProduct = async(req,res,next)=> {
             break;
         }
     }
+    await cart.save();
     if(cart.productList.length === oldLegth) throw new Error("Your cart doesn't contain this product");
     else if(cart.productList.length === 0) {
         deleteCart = await CartInfo.deleteOne({_id : cart._id});

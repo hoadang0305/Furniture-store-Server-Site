@@ -107,7 +107,7 @@ const updateProduct = async(req,res,next)=> {
     }
     
     product.name = req.body.name || product.name;
-    if(req.body.discount === "0") {
+    if(req.body.discount === "") {
       product.price = req.body.originPrice || product.price;
       product.discount = "" || product.discount;
     } else {
