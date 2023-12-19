@@ -108,7 +108,7 @@ const loginAdmin = async (req, res, next) => {
                 token: await user.generateJWTSeller(), 
             });
         } else {
-            throw new Error("Invalid email or password");
+            throw new Error("Invalid password");
         }
     } catch(error) {
         next(error);
