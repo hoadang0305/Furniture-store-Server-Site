@@ -28,7 +28,7 @@ const addProduct = async (req,res, next) => {
       });
       if(!newCart) throw new Error("can't add product to cart");
 
-      res.status(201).json(newCart);
+      res.status(201).json(newCart.productList);
 
     } else {
         const existingProduct = await CartInfo.findOne({
@@ -51,7 +51,7 @@ const addProduct = async (req,res, next) => {
 
         const updatedCart = await CartInfo.findOne({ userId: req.user._id });
         if(!updatedCart) throw new Error("cant update cart")
-        res.status(201).json(updatedCart);
+        res.status(201).json(updatedCart.productList);
     }
     
   } catch (err) {
@@ -85,32 +85,47 @@ const deleteProduct = async(req,res,next)=> {
   try {
     let cart = await CartInfo.findOne({userId : req.user._id});
     if(!cart){
-        throw new Error("Dont have any products in the cart");
+        throw new Error("Don't have any items in cart");
     }
-    let existingProduct = null
-    cart.productList.forEach((arrObj) => {
-      if (arrObj.productName === req.body.name) {
-        existingProduct = arrObj;
-        return false; // break the loop
-      }
-    });
-  if (!existingProduct) {
-      throw new Error("Dont have product in cart");
-  }
-    const deletionResult = await CartInfo.updateOne(
-      { userId: req.user._id},
-      { $pull: { productList: existingProduct} }
-    );    
-    if (deletionResult) {
-      cart = await CartInfo.findOne({userId : req.user._id})
-      if (cart.productList.length === 0)
-      { 
-        a = await CartInfo.deleteOne({ _id: cart._id});
-      }
-      res.status(200).json({ message: "Product deleted successfully" });
-    } else {
-      throw new Error("Failed to delete product");
+    // let existingProduct = null
+    // cart.productList.forEach((arrObj) => {
+    //   if (arrObj.productName === req.body.name) {
+
+    //     existingProduct = arrObj;
+        
+    //   }
+    // });
+    const oldLegth = cart.productList.length;
+    for(let i = 0; i < cart.productList.length; i ++ ){
+        if(cart.productList[i].productName === req.body.name){
+            cart.productList.splice(i,1);
+            break;
+        }
     }
+    if(cart.productList.length === oldLegth) throw new Error("Your cart doesn't contain this product");
+    else if(cart.productList.length === 0) {
+        deleteCart = await CartInfo.deleteOne({_id : cart._id});
+        if(deleteCart) res.status(201).json({message: "Your cart is empty"});
+    } else if(cart.productList.length === oldLegth - 1){
+        res.status(201).json(cart.productList);
+    }
+//   if (!existingProduct) {
+//       throw new Error("Dont have this product in cart");
+//     }
+//     const deletionResult = await CartInfo.updateOne(
+//       { userId: req.user._id},
+//       { $pull: { productList: existingProduct} }
+//     );    
+//     if (deletionResult) {
+//       cart = await CartInfo.findOne({userId : req.user._id})
+//       if (cart.productList.length === 0)
+//       { 
+//         a = await CartInfo.deleteOne({ _id: cart._id});
+//       } 
+//       res.status(200).json();
+//     } else {
+//       throw new Error("Failed to delete product");
+    //}
   } catch (err) {
     next(err);
   }
