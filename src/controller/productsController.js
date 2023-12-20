@@ -121,8 +121,8 @@ const updateProduct = async(req,res,next)=> {
     product.type = req.body.type;
     
 
-    const updatePro = await product.save(); 
-    res.status(201).json(updatePro.select("-images"));
+    const updatePro = await product.save();
+    res.status(201).json(updatePro);
   } catch (err) {
     next(err);
   }
