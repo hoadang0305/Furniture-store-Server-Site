@@ -106,19 +106,19 @@ const updateProduct = async(req,res,next)=> {
       throw new Error("This product does not exist");
     }
     
-    product.name = req.body.name || product.name;
-    if(req.body.discount === "") {
-      product.price = req.body.originPrice || product.price;
-      product.discount = "" || product.discount;
+    product.name = req.body.name;
+    if(req.body.discount === "0") {
+      product.price = req.body.originPrice;
+      product.discount = "";
     } else {
-      product.price = (req.body.originPrice - req.body.originPrice * (parseFloat(req.body.discount) / 100)) || product.price;
-      product.discount = req.body.discount || product.discount;
+      product.price = (req.body.originPrice - req.body.originPrice * (parseFloat(req.body.discount) / 100))
+      product.discount = "-" + req.body.discount + "%";
     }
-    product.originPrice = req.body.originPrice || product.originPrice;
-    product.quantity = req.body.quantity || product.quantity;
-    product.shortDesc = req.body.shortDesc || product.shortDesc;
-    product.fullDesc = req.body.fullDesc || product.fullDesc;
-    product.type = req.body.type || product.type;
+    product.originPrice = req.body.originPrice;
+    product.quantity = req.body.quantity;
+    product.shortDesc = req.body.shortDesc;
+    product.fullDesc = req.body.fullDesc;
+    product.type = req.body.type;
     
 
     const updatePro = await product.save(); 
