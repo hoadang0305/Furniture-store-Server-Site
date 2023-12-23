@@ -1,4 +1,4 @@
-# Getting Started with Math Web
+# How to start code
 
 1. Clone the source code.
 
